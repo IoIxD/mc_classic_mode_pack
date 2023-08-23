@@ -10,7 +10,18 @@
     "samplers": [
         { "name": "DiffuseSampler" },
         { "name": "FontSampler" },
-        { "name": "NumberSampler" }
+        { "name": "NumberSampler" },
+        { "name": "DiffuseDepthSampler" },
+        { "name": "TranslucentSampler" },
+        { "name": "TranslucentDepthSampler" },
+        { "name": "ItemEntitySampler" },
+        { "name": "ItemEntityDepthSampler" },
+        { "name": "ParticlesSampler" },
+        { "name": "ParticlesDepthSampler" },
+        { "name": "CloudsSampler" },
+        { "name": "CloudsDepthSampler" },
+        { "name": "WeatherSampler" },
+        { "name": "WeatherDepthSampler" }
 
     ],
     "uniforms": [

@@ -1,0 +1,10 @@
+{
+	"pack": {
+		"pack_format": 15,
+		"description":
+		{
+			"text":"Server pack that hides the hunger/xp bar and repositions other things that are no longer in the game.",
+			"bold": false
+		}
+	}
+}

@@ -1,0 +1,38 @@
+{
+    "targets": [
+        "water",
+        "translucent",
+        "itemEntity",
+        "particles",
+        "clouds",
+        "weather",
+        "swap"
+    ],
+    
+    "passes": [
+        {
+            "name": "draw_text",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "auxtargets": [
+                {
+                    "name": "FontSampler",
+                    "id": "shader_font",
+                    "width":1,
+                    "height":1,
+                    "bilinear":false
+                },
+                {
+                    "name": "NumberSampler",
+                    "id":"minecraft:main"
+                }
+            ]
+            
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}

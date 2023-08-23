@@ -8,6 +8,7 @@
     "fragment": "draw_text",
     "attributes": [ "Position" ],
     "samplers": [
+        { "name": "DiffuseSampler" },
         { "name": "FontSampler" },
         { "name": "NumberSampler" }
 

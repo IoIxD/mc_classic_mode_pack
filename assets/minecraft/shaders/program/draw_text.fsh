@@ -1,6 +1,6 @@
 #version 150
 in vec2 texCoord;          // screen texCoordition <-1,+1>
-
+uniform sampler2D DiffuseSampler;
 uniform sampler2D NumberSampler;
 uniform sampler2D FontSampler;  // ASCII 32x8 characters font texture unit
 
@@ -76,45 +76,39 @@ void floatToDigits(float x) {
 
 void characterrender(int char, float x0, float y0, float offset) {
     // Fragment position **in char-units**, relative to x0, y0
-    float x = texCoord.x/FXS; 
-	x -= x0;
-    float y = 0.5*(1.0 - texCoord.y)/(FYS); 
-	y -= y0;
+    float x = texCoord.x/FXS; x -= x0;
+    float y = 0.5*(1.0 - texCoord.y)/FYS; y -= y0; 
 
+    // Stop if not inside bbox
+    if ((x < 0.0) || (x > 1.0) || (y < 0.0) || (y > 1.0)) return;
+    
     int i = int(x); // Char index of this fragment in text
     x -= float(i); // Fraction into this char
 
-    // Stop if not inside bbox
-    if ((x < 0.0) || (x > 1.0) || (y < 0.0) || (y > 1.0))
-	{
-		return;
-	} else {
-		// Grab pixel from correct char texture
-		i = char;
-		x += float(int(i - ((i/16)*16)));
-		y += float(int(i/16));
-		x /= 16.0; y /= 16.0; // Divide by character-sheet size (in chars)
+	// Grab pixel from correct char texture
+    i = char;
+    x += float(int(i - ((i/16)*16)));
+    y += float(int(i/16));
+    x /= 16.0; y /= 16.0; // Divide by character-sheet size (in chars)
 
-		vec4 fontPixel = texture2D(FontSampler, vec2(x,y));
-		
-		if(fontPixel.a >= 1.0) {
-			text_colour = vec4(1.0-offset,1.0-offset,1.0-offset,1.0);
-		} else {
-			text_colour = vec4(0.0,0.0,0.0,1.0);
-			return;
-		}
+	vec4 fontPixel = texture2D(FontSampler, vec2(x,y));
+	
+	if(fontPixel.a >= 1.0) {
+		text_colour = vec4(1.0-offset,1.0-offset,1.0-offset, 1.0);
 	}
+    
 }
-
+vec4 numToPrint = texture2D(NumberSampler, vec2(0.5, 0.5));
 
 void c(int char, float x0, float y0) {
 	float position_offset = 0.1;
 	float color_offset = 0.8;
-	float x1 = x0-position_offset;
-	float y1 = y0-position_offset;
-	characterrender(char,x0,y0,color_offset);
-	characterrender(char,x1,y1,0.0);
+	float x1 = x0+position_offset;
+	float y1 = y0+position_offset;
+	characterrender(char,x1,y1,color_offset);
+	characterrender(char,x0,y0,0.0);
 	
+	floatToDigits(numToPrint.r);
 }
 
 float starting = 1.0;
@@ -134,8 +128,9 @@ void clearTextBuffer() {
 
 void main() {
 
-	text_colour = texture2D(NumberSampler, texCoord);
-
+	text_colour = texture2D(DiffuseSampler, texCoord);
+	
+	
 	// Define text to draw
     clearTextBuffer();
     c(77, 	1.0,			1.0); 	// M
@@ -155,5 +150,7 @@ void main() {
 	c(46, 	charlen(-1.75),	1.0); 	// .
 	c(49, 	charlen(-3.0),	1.0); 	// 1
 	c(32, 	charlen(-3.0),	1.0); 	// 1
+	
+
 	gl_FragColor = text_colour;
 }
